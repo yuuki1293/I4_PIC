@@ -221,4 +221,20 @@ LOOPA
 	GOTO	LOOPC		; 2*(22-2) = 40
 	RETURN				; 2c
 
+;5362
+TIMEAS
+	MOVLW	015H		; 1c 15H = 21
+	MOVWF	CNT			; 1c
+	NOP
+	NOP
+	NOP
+	NOP
+	NOP
+	NOP					; 6
+LOOPAS
+	CALL	TIME50U		; (2+250)*21 = 5292
+	DECFSZ	CNT, F		; 1*(21-1)+2*1 = 22
+	GOTO	LOOPC		; 2*(21-2) = 38
+	RETURN				; 2c
+
 	END
