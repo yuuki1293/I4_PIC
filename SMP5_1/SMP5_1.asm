@@ -80,4 +80,16 @@ LOOPC
 	GOTO	LOOPC		; 2*(35-2) = 66
 	RETURN				; 2c
 
+;8512
+TIMED
+	MOVLW	021H		; 1c 21H = 33
+	MOVWF	CNT			; 1c
+LOOPC
+	CALL	TIME50U		; (2+250)*33 = 8316
+	NOP					; 1*33 = 33
+	NOP					; 1*33 = 33
+	DECFSZ	CNT, F		; 1*(33-1)+2*1 = 34
+	GOTO	LOOPC		; 2*(33-2) = 62
+	RETURN				; 2c
+
 	END
