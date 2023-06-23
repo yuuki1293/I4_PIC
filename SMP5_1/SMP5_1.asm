@@ -72,7 +72,7 @@ TIMECS
 	NOP
 	NOP
 	NOP
-LOOPC
+LOOPCS
 	CALL	TIME50U		; (2+250)*35 = 8820
 	NOP					; 1*35 = 35
 	NOP					; 1*35 = 35
@@ -84,12 +84,54 @@ LOOPC
 TIMED
 	MOVLW	021H		; 1c 21H = 33
 	MOVWF	CNT			; 1c
-LOOPC
+LOOPD
 	CALL	TIME50U		; (2+250)*33 = 8316
 	NOP					; 1*33 = 33
 	NOP					; 1*33 = 33
 	DECFSZ	CNT, F		; 1*(33-1)+2*1 = 34
 	GOTO	LOOPC		; 2*(33-2) = 62
+	RETURN				; 2c
+
+;8036
+TIMEDS
+	MOVLW	01FH		; 1c 1FH = 31
+	MOVWF	CNT			; 1c
+	NOP
+	NOP
+	NOP
+	NOP
+	NOP
+	NOP
+	NOP
+LOOPDS
+	CALL	TIME50U		; (2+250)*31 = 7812
+	NOP					; 31
+	NOP					; 31
+	NOP					; 31
+	DECFSZ	CNT, F		; 1*(31-1)+2*1 = 32
+	GOTO	LOOPC		; 2*(31-2) = 58
+	RETURN				; 2c
+
+;7585
+TIMEE
+	MOVLW	01DH		; 1c 1DH = 29
+	MOVWF	CNT			; 1c
+	NOP
+	NOP
+	NOP
+	NOP
+	NOP
+	CALL	TIME8c		; 10c
+LOOPE
+	CALL	TIME50U		; (2+250)*29 = 7308
+	NOP
+	NOP
+	NOP
+	NOP
+	NOP
+	NOP					; 6*29 = 174
+	DECFSZ	CNT, F		; 1*(29-1)+2*1 = 30
+	GOTO	LOOPC		; 2*(29-2) = 54
 	RETURN				; 2c
 
 	END
