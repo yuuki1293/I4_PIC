@@ -171,4 +171,15 @@ LOOPFS
 	GOTO	LOOPC		; 2*(26-2) = 48
 	RETURN				; 2c
 
+;6377
+TIMEG
+	MOVLW	019H		; 1c 19H = 25
+	MOVWF	CNT			; 1c
+	NOP					; 1c
+LOOPG
+	CALL	TIME50U		; (2+250)*25 = 6300
+	DECFSZ	CNT, F		; 1*(25-1)+2*1 = 26
+	GOTO	LOOPC		; 2*(25-2) = 46
+	RETURN				; 2c
+
 	END
