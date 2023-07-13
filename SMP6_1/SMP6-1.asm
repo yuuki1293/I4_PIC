@@ -22,7 +22,7 @@ W_TEMP      EQU 0EH
     MOVF    STATUS_TEMP, W
     MOVWF   STATUS
     SWAPF   W_TEMP, F
-    SWAPF   W?TEMP, W
+    SWAPF   W_TEMP, W
     BCF     INTCON, INTF
     RETFIE
 
