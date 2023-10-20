@@ -1,0 +1,75 @@
+    LIST P=PIC16F819
+    #INCLUDE <P16F819.INC>
+
+    __CONFIG    _HS_OSC & _CP_OFF & _WDT_OFF & _PWRTE_ON & _MCLR_ON & _LVP_OFF
+
+CNT         EQU 020H
+CNTDEG      EQU 021H
+DIVIDEND    EQU 022H
+
+    ORG     0H
+MAIN
+    BSF     STATUS, RP0
+    MOVLW   01H
+    MOVWF   TRISA
+    CLRF    TRISB
+    MOVLW   b'00001110'
+    MOVWF   ADCON1
+    BCF     STATUS, RP0
+    MOVLW   081H
+    MOVWF   ADCON0
+    CLRF    PORTA
+    CLRF    PORTB
+
+ADSTART
+    CALL    TIME20U
+    BSF     ADCON0, GO
+ADLOOP
+    BTFSC   ADCON0, GO
+    GOTO    ADLOOP
+    MOVF    ADRESH, W
+    CALL    TO7SEG
+    MOVWF   PORTB
+    GOTO    ADSTART
+
+TIME20U
+    MOVLW   020H
+    MOVWF   CNT
+    NOP
+LOOP
+    DECFSZ  CNT, F
+    GOTO    LOOP
+    RETURN
+
+; 8bit 7seg converter 0.0V~5.0V
+; arg: W - 8bit in
+; ret: W - 8bit out
+TO7SEG
+    MOVWF   DIVIDEND
+    MOVLW   B'11111111'
+    MOVWF   CNT
+    MOVWF   CNTDEG
+    MOVLW   D'5'
+TO7SEGLOOP
+    INCF    CNT
+    INCF    CNTDEG
+
+    MOVLW   D'10'
+    SUBWF   CNTDEG, W
+    BTFSS   STATUS, Z
+    GOTO    DIVSECTION
+    
+    MOVLW   D'6'
+    ADDWF   CNT, F
+    CLRF    CNTDEG
+
+DIVSECTION
+    MOVLW   D'5'
+    SUBWF   DIVIDEND, F
+    BTFSC   STATUS, C
+    GOTO    TO7SEGLOOP    
+
+    MOVF    CNT, W
+    RETURN
+
+    END
