@@ -6,7 +6,7 @@
 CNT         EQU 020H
 CNTDEG      EQU 021H
 DIVIDEND    EQU 022H
-CNT01       EQU 023H
+BIT         EQU 023H
 
     ORG     0H
 MAIN
@@ -49,12 +49,14 @@ TO7SEG
     MOVWF   DIVIDEND
     MOVLW   B'11111111'
     MOVWF   CNT
-    MOVWF   CNT01
     MOVWF   CNTDEG
     MOVLW   D'5'
 TO7SEGLOOP
-    INCF    CNT
-    INCF    CNTDEG
+    MOVLW   0H
+    MOVWF   BIT
+
+    INCF    CNT, F
+    INCF    CNTDEG, F
 
     MOVLW   D'10'
     SUBWF   CNTDEG, W
@@ -65,16 +67,16 @@ TO7SEGLOOP
     ADDWF   CNT, F
     CLRF    CNTDEG
 
-    INCF    CNT01
+    INCF    BIT, F
 
 DIVSECTION
     MOVLW   D'5'
+    ADDWF   BIT, W
     SUBWF   DIVIDEND, F
     BTFSC   STATUS, C
     GOTO    TO7SEGLOOP    
 
-    MOVF    CNT01, W
-    SUBWF   CNT, W
+    MOVF    CNT, W
     RETURN
 
     END
