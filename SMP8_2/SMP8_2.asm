@@ -61,11 +61,19 @@ TO7SEGLOOP
     MOVLW   D'10'
     SUBWF   CNTDEG, W
     BTFSS   STATUS, Z
-    GOTO    DIVSECTION
+    GOTO    INC49
     
     MOVLW   D'6'
     ADDWF   CNT, F
     CLRF    CNTDEG
+
+    INCF    BIT, F
+
+INC49
+    MOVLW   49H
+    SUBWF   CNT, W
+    BTFSS   STATUS, Z
+    GOTO    DIVSECTION
 
     INCF    BIT, F
 
@@ -79,4 +87,4 @@ DIVSECTION
     MOVF    CNT, W
     RETURN
 
-    END
+    END 
