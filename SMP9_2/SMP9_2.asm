@@ -92,10 +92,7 @@ LOOP2
     RETURN
 
 FETCH8
-    MOVWF   FETCHTMP
-    MOVF    PCL, W
-    MOVF    FETCHTMP, W
     ADDWF   PCL, F
     DT  "NAKAMURA YUUKI／中村　祐希\r\n", 0
-    
+
     END
