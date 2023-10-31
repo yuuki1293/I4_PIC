@@ -1,5 +1,5 @@
     LIST P=PIC16F84A
-    #INCLUDE<P16F84A>
+    #INCLUDE<P16F84A.INC>
 
     __CONFIG _HS_OSC & _CP_OFF & _WDT_OFF & _PWRTE_ON
 
@@ -10,7 +10,10 @@ CNTB        EQU 0FH
 TMPA        EQU 010H
 OUT         EQU 011H
 
-    ORG 04H
+    ORG     0H
+    GOTO    MAIN
+
+    ORG     04H
 
 ;PUSH
     MOVWF   W_TEMP
@@ -39,6 +42,7 @@ MAIN
     BSF     INTCON, GIE
     BSF     INTCON, INTE
 
+    CLRF    OUT
 MAINLP
     MOVF    OUT, W
     MOVWF   PORTA
