@@ -41,8 +41,6 @@ MAIN
     BCF     STATUS, RP0
     BSF     INTCON, GIE
     BSF     INTCON, INTE
-
-    CLRF    OUT
 MAINLP
     MOVF    OUT, W
     MOVWF   PORTA
