@@ -29,7 +29,7 @@ TMP         EQU 012H
     MOVLW   '0'
     SUBWF   TMP, F
     BTFSS   STATUS, C
-    GOTO    INVALID
+    GOTO    DEFAULT
 
     BTFSS   STATUS, Z
     GOTO    SHIFT_INIT
@@ -43,16 +43,16 @@ SHIFT_INIT
 SHIFTLOOP
     RRF     OUT, F
 
-    BTFSC   OUT, 3
-    GOTO    INVALID
+    BTFSC   OUT, 2
+    GOTO    DEFAULT
 
     DECFSZ  CNT, F
     GOTO    SHIFTLOOP
 
     GOTO    INTEND
 
-INVALID
-    MOVLW   b'10111000'
+DEFAULT
+    MOVLW   b'11111000'
     MOVWF   OUT
 
 INTEND
