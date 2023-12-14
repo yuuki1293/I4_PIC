@@ -38,11 +38,12 @@ ADLOOP
     GOTO    ADLOOP
 
 ;Tx begin
-;b00010000送信
-    MOVLW   b'00010000'
+;b01000000 開始信号送信
+    MOVLW   b'01000000'
     CALL    CSEND
-;9:8ビット送信
-    MOVF    ADRESH, W
+;3:0ビット送信
+    MOVF    ADRESL, W
+    ANDLW   b'00001111'
     CALL    CSEND
 ;7:4ビット送信
     MOVF    ADRESL, W
@@ -50,10 +51,13 @@ ADLOOP
     SWAPF   ADRES, W
     ANDLW   b'00001111'
     CALL    CSEND
-;3:0ビット送信
-    MOVF    ADRESL, W
-    ANDLW   b'00001111'
+;9:8ビット送信
+    MOVF    ADRESH, W
     CALL    CSEND
+;b10000000 終了信号送信
+    MOVLW   b'10000000'
+    CALL    CSEND
+;Tx end
 
     GOTO    ADSTART
 
