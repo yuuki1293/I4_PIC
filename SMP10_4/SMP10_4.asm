@@ -7,25 +7,23 @@
 CNT1        EQU 0EH
 CNTB        EQU 0FH
 IN          EQU 012H
-ADRES       EQU 013H
+ADL         EQU 013H
+ADH         EQU 014H
 
 ;ad
 CNT         EQU 020H
-CNTDEG      EQU 021H
-DIVIDEND    EQU 022H
-BIT         EQU 023H
 
     ORG     0H
 
 MAIN
     BSF     STATUS, RP0
-    MOVLW   01H
+    MOVLW   b'000000001'
     MOVWF   TRISA
     CLRF    TRISB
     MOVLW   b'10001110'
     MOVWF   ADCON1
     BCF     STATUS, RP0
-    MOVLW   081H
+    MOVLW   b'10000001'
     MOVWF   ADCON0
     CLRF    PORTA
     CLRF    PORTB
@@ -37,26 +35,32 @@ ADLOOP
     BTFSC   ADCON0, GO
     GOTO    ADLOOP
 
+    BSF     STATUS, RP0
+    MOVF    ADRESL, W
+    BCF     STATUS, RP0
+    MOVWF   ADL
+    MOVF    ADRESH, W
+    MOVWF   ADH
+
 ;Tx begin
 ;b01000000 開始信号送信
-    MOVLW   b'01000000'
+    MOVLW   b'00010000'
     CALL    CSEND
 ;3:0ビット送信
-    MOVF    ADRESL, W
+    MOVF    ADL, W
     ANDLW   b'00001111'
     CALL    CSEND
 ;7:4ビット送信
-    MOVF    ADRESL, W
-    MOVWF   ADRES
-    SWAPF   ADRES, W
+    SWAPF   ADL, W
     ANDLW   b'00001111'
     CALL    CSEND
 ;9:8ビット送信
-    MOVF    ADRESH, W
+    MOVF    ADH, W
     CALL    CSEND
 ;b10000000 終了信号送信
-    MOVLW   b'10000000'
+    MOVLW   b'00100000'
     CALL    CSEND
+
 ;Tx end
 
     GOTO    ADSTART
