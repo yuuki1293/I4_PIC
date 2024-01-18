@@ -9,6 +9,7 @@ CNTB        EQU 0FH
 IN          EQU 012H
 ADL         EQU 013H
 ADH         EQU 014H
+ADID        EQU 015H    ;CH判別用
 
 ;ad
 CNT         EQU 020H
@@ -17,16 +18,27 @@ CNT         EQU 020H
 
 MAIN
     BSF     STATUS, RP0
-    MOVLW   b'000000001'
+    MOVLW   b'00000001'
     MOVWF   TRISA
     CLRF    TRISB
-    MOVLW   b'10001110'
+    MOVLW   b'10000100'
     MOVWF   ADCON1
     BCF     STATUS, RP0
-    MOVLW   b'10000001'
-    MOVWF   ADCON0
     CLRF    PORTA
     CLRF    PORTB
+MAINLP
+;Read CH0
+    BCF     ADID, 1
+    MOVLW   b'10000001'
+    MOVWF   ADCON0
+    CALL    ADSTART
+;Read CH1
+    BSF     ADID, 1
+    MOVLW   b'10001001'
+    MOVWF   ADCON0
+    CALL    ADSTART
+
+    CALL    MAINLP
 
 ADSTART
     CALL    TIME20U
@@ -42,9 +54,14 @@ ADLOOP
     MOVF    ADRESH, W
     MOVWF   ADH
 
+    CALL    DSEND
+    RETURN
+
+DSEND
 ;Tx begin
-;b01000000 開始信号送信
+;b00010000 開始信号送信
     MOVLW   b'00010000'
+    IORWF   ADID, W
     CALL    CSEND
 ;3:0ビット送信
     MOVF    ADL, W
@@ -57,13 +74,11 @@ ADLOOP
 ;9:8ビット送信
     MOVF    ADH, W
     CALL    CSEND
-;b10000000 終了信号送信
+;b00100000 終了信号送信
     MOVLW   b'00100000'
     CALL    CSEND
-
 ;Tx end
-
-    GOTO    ADSTART
+    RETURN
 
 TIME20U
     MOVLW   020H
