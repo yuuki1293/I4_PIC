@@ -66,16 +66,20 @@ DSEND
 ;3:0ビット送信
     MOVF    ADL, W
     ANDLW   b'00001111'
+    IORWF   ADID, W
     CALL    CSEND
 ;7:4ビット送信
     SWAPF   ADL, W
     ANDLW   b'00001111'
+    IORWF   ADID, W
     CALL    CSEND
 ;9:8ビット送信
     MOVF    ADH, W
+    IORWF   ADID, W
     CALL    CSEND
 ;b00100000 終了信号送信
     MOVLW   b'00100000'
+    IORWF   ADID, W
     CALL    CSEND
 ;Tx end
     RETURN
