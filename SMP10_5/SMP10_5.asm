@@ -28,12 +28,12 @@ MAIN
     CLRF    PORTB
 MAINLP
 ;Read CH0
-    BCF     ADID, 1
+    BCF     ADID, 6
     MOVLW   b'10000001'
     MOVWF   ADCON0
     CALL    ADSTART
 ;Read CH1
-    BSF     ADID, 1
+    BSF     ADID, 6
     MOVLW   b'10001001'
     MOVWF   ADCON0
     CALL    ADSTART
@@ -53,9 +53,6 @@ ADLOOP
     MOVWF   ADL
     MOVF    ADRESH, W
     MOVWF   ADH
-
-    CALL    DSEND
-    RETURN
 
 DSEND
 ;Tx begin
